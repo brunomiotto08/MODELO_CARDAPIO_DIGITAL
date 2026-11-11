@@ -1,0 +1,183 @@
+{
+  "/images/hero.jpg": [
+    480,
+    960,
+    1440,
+    1920
+  ],
+  "/images/insta/mesa-01.jpg": [
+    480,
+    960,
+    1440,
+    1920
+  ],
+  "/images/insta/mesa-02.jpg": [
+    480,
+    960,
+    1440,
+    1625
+  ],
+  "/images/insta/mesa-03.jpg": [
+    480,
+    960,
+    1440,
+    1707
+  ],
+  "/images/insta/mesa-04.jpg": [
+    480,
+    960,
+    1440,
+    1920
+  ],
+  "/images/insta/mesa-05.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/insta/mesa-06.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/insta/mesa-07.jpg": [
+    480,
+    640
+  ],
+  "/images/insta/mesa-08.jpg": [
+    480,
+    960,
+    1029
+  ],
+  "/images/insta/mesa-09.jpg": [
+    480,
+    960,
+    1029
+  ],
+  "/images/insta/mesa-10.jpg": [
+    480,
+    960,
+    1029
+  ],
+  "/images/insta/mesa-12.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/insta/mesa-13.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/insta/mesa-14.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/logos/logo-color.png": [
+    960
+  ],
+  "/images/logos/logo-compact-color.png": [
+    960
+  ],
+  "/images/logos/logo-compact-white.png": [
+    960
+  ],
+  "/images/logos/logo-white.png": [
+    960
+  ],
+  "/images/logos/micros/flor-white.png": [
+    480
+  ],
+  "/images/logos/micros/flor.png": [
+    480
+  ],
+  "/images/logos/micros/fue.png": [
+    480
+  ],
+  "/images/originais/554681920_18070728590225627_5068617726204886317_n.jpg": [
+    480,
+    960,
+    1080
+  ],
+  "/images/originais/705590216_18094783085225627_6480875386639421400_n.jpg": [
+    480,
+    720
+  ],
+  "/images/originais/732544599_18099586328225627_8567253256777961308_n.jpg": [
+    480,
+    720
+  ],
+  "/images/originais/734846096_18099289265225627_15695799976595639_n.jpg": [
+    480,
+    720
+  ],
+  "/images/originais/752279146_18100794845225627_7247277475491765640_n.jpg": [
+    480,
+    720
+  ],
+  "/images/originais/758356920_18101351807225627_9019311309988811826_n.jpg": [
+    480,
+    960,
+    1080
+  ],
+  "/images/originais/pt2/482264012_18050911670225627_5235925662403060619_n.jpg": [
+    480,
+    960,
+    1029
+  ],
+  "/images/originais/pt2/499851985_18058664924225627_2769296814494146418_n.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/originais/pt2/519614898_18063185186225627_5128743997338749391_n.jpg": [
+    480,
+    960,
+    1440
+  ],
+  "/images/originais/pt2/524710861_18064648754225627_8744832772324765551_n.jpg": [
+    480,
+    720
+  ],
+  "/images/originais/pt2/530325300_18065965703225627_4656856284104953876_n.jpg": [
+    480,
+    720
+  ],
+  "/images/originais/pt2/588055573_18078257930225627_2589721863208592128_n.jpg": [
+    480,
+    960,
+    1080
+  ],
+  "/images/originais/pt2/625358517_18111124681630141_3849411008942988494_n.jpg": [
+    480,
+    960,
+    1029
+  ],
+  "/images/products/burrata.jpg": [
+    480,
+    960,
+    1280
+  ],
+  "/images/products/mini-hamburguer.jpg": [
+    480,
+    960,
+    973
+  ],
+  "/images/products/palito-caprese.jpg": [
+    354
+  ],
+  "/images/products/tabua.jpg": [
+    480,
+    560
+  ],
+  "/images/products/torta-fria-vegetariana-fatia.jpg": [
+    480,
+    960,
+    1029
+  ],
+  "/images/products/torta-fria-vegetariana.jpg": [
+    480,
+    960,
+    1029
+  ]
+}

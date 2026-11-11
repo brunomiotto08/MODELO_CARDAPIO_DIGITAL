@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monte sua mesa — ao lado</title>
+  <style>
+    :root {
+      --ink: #404041;
+      --muted: #595959;
+      --ivory: #f2f2f3;
+      --cloth: #fbfbfb;
+      --line: #e3e3e3;
+      --sage: #bac6b6;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--ivory);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    header, main { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 8px;
+    }
+    .brand { font-weight: 600; font-size: 18px; letter-spacing: -0.02em; }
+    nav { display: flex; gap: 22px; }
+    nav a { color: var(--ink); text-decoration: none; font-size: 15px; }
+    h1 { font-size: 44px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; margin: 18px 0 8px; }
+    .lede { max-width: 46ch; margin: 0 0 28px; color: var(--muted); }
+    .split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 36px; align-items: start; }
+    .table {
+      position: relative;
+      aspect-ratio: 8 / 5;
+      border-radius: 18px;
+      background: var(--cloth);
+      box-shadow: 0 18px 32px -20px rgb(64 64 65 / 0.45), inset 0 0 0 1px rgb(64 64 65 / 0.08);
+    }
+    .piece {
+      position: absolute;
+      translate: -50% -50%;
+      box-shadow: 0 12px 16px -10px rgb(64 64 65 / 0.4);
+    }
+    .loaf { border-radius: 8px; background: #e4dfd6; }
+    .board { border-radius: 6px; background: #cbbfa8; }
+    .platter { border-radius: 10px; background: #f7f7f7; box-shadow: 0 10px 14px -10px rgb(64 64 65 / 0.45), inset 0 0 0 1px #e3e3e3; }
+    .round { border-radius: 50%; background: #f3e2b8; }
+    .note { margin: 12px 0 0; color: var(--muted); font-size: 15px; }
+    h2 { font-size: 26px; font-weight: 500; margin: 0 0 8px; }
+    .kit {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px 14px 12px;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--ink);
+    }
+    .kit strong { font-size: 20px; font-weight: 550; }
+    .kit span, .kit li { color: var(--muted); font-size: 15px; }
+    .kit ul { margin: 0; padding-left: 18px; }
+    .row { display: flex; align-items: flex-end; gap: 8px; min-height: 36px; }
+    .mini { display: block; box-shadow: 0 6px 8px -6px rgb(64 64 65 / 0.45); }
+    .products { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; margin-top: 22px; }
+    .products p { margin: 4px 0 0; font-size: 15px; }
+    .swatch {
+      display: block;
+      height: 72px;
+      border-radius: 8px;
+      background: #e7e2d8;
+    }
+    .tab {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      background: var(--ink);
+      color: #f3f3f3;
+      font: inherit;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Flor Alecrim</div>
+    <nav>
+      <a href="#mesa">Cardápio</a>
+      <a href="#mesa">Monte sua mesa</a>
+    </nav>
+  </header>
+  <main id="mesa">
+    <h1>Monte sua mesa</h1>
+    <p class="lede">Escolha quantos itens quiser, de todo o cardápio. A mesa é uma prévia: quantidades, valores e a data se confirmam no WhatsApp.</p>
+    <div class="split">
+      <section>
+        <div class="table" aria-label="Mesa montada">
+          <div class="piece board" style="left:32%;top:48%;width:38%;height:28%"></div>
+          <div class="piece loaf" style="left:68%;top:36%;width:26%;height:22%"></div>
+          <div class="piece platter" style="left:62%;top:68%;width:30%;height:16%"></div>
+          <div class="piece round" style="left:28%;top:74%;width:14%;height:22%"></div>
+        </div>
+        <p class="note">Toque em um prato para tirá-lo da mesa.</p>
+      </section>
+      <section>
+        <h2>Sugestões prontas</h2>
+        <p class="lede" style="margin-bottom:0">Combinações que já funcionam juntas. Escolha uma e a mesa se monta.</p>
+        <button class="kit" type="button">
+          <strong>Mesa para dois</strong>
+          <span>2 a 3 pessoas</span>
+          <span class="row" aria-hidden="true">
+            <i class="mini round" style="width:28px;height:28px"></i>
+            <i class="mini platter" style="width:46px;height:16px"></i>
+            <i class="mini loaf" style="width:40px;height:16px"></i>
+          </span>
+          <ul>
+            <li>Brie Crocante Mel e Nuts P</li>
+            <li>Palito Caprese</li>
+            <li>Terrine Caprese</li>
+          </ul>
+        </button>
+        <div class="products">
+          <article>
+            <span class="swatch"></span>
+            <p>Torta Fria Frango</p>
+            <p>R$ 110,00</p>
+          </article>
+          <article>
+            <span class="swatch" style="background:#efe6cf"></span>
+            <p>Brie Crocante Mel e Nuts G</p>
+            <p>R$ 220,00</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+  <button class="tab" type="button">A mesa, 4 itens</button>
+</body>
+</html>

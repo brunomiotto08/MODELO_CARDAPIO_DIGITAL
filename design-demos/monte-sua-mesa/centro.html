@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monte sua mesa — centro</title>
+  <style>
+    :root {
+      --ink: #404041;
+      --muted: #595959;
+      --ivory: #f2f2f3;
+      --cloth: #fbfbfb;
+      --line: #e3e3e3;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--ivory);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 250px 1fr 320px;
+      gap: 22px;
+      min-height: 100%;
+      padding: 22px;
+    }
+    aside, .list { background: #fbfbfb; border-radius: 16px; padding: 16px; }
+    h1 { font-size: 28px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 14px; }
+    .mini-table {
+      position: relative;
+      height: 78px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      background: var(--ivory);
+    }
+    .chip { position: absolute; }
+    button.pick {
+      display: block;
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+    button.pick strong { display: block; font-size: 16px; }
+    button.pick span { color: var(--muted); font-size: 14px; }
+    .stage { display: flex; flex-direction: column; justify-content: center; }
+    .stage h2 { font-size: 36px; font-weight: 500; letter-spacing: -0.03em; margin: 0 0 14px; }
+    .table {
+      position: relative;
+      height: min(62vh, 520px);
+      border-radius: 22px;
+      background: var(--cloth);
+      box-shadow: 0 22px 36px -18px rgb(64 64 65 / 0.42), inset 0 0 0 1px rgb(64 64 65 / 0.08);
+    }
+    .piece { position: absolute; translate: -50% -50%; }
+    .board { border-radius: 6px; background: #cbbfa8; box-shadow: 0 14px 18px -12px rgb(64 64 65 / 0.45); }
+    .loaf { border-radius: 8px; background: #e4dfd6; box-shadow: 0 14px 18px -12px rgb(64 64 65 / 0.45); }
+    .platter { border-radius: 12px; background: #f7f7f7; box-shadow: inset 0 0 0 1px #e3e3e3, 0 12px 16px -12px rgb(64 64 65 / 0.4); }
+    .round { border-radius: 50%; background: #f3e2b8; box-shadow: 0 12px 16px -12px rgb(64 64 65 / 0.4); }
+    .list h2 { font-size: 22px; margin: 0; }
+    .list p { margin: 4px 0 16px; color: var(--muted); }
+    .item {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+    .item strong { font-weight: 600; }
+    .item span { display: block; color: var(--muted); font-size: 14px; }
+    .send {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #f3f3f3;
+      font: inherit;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Sugestões prontas</h1>
+      <button class="pick" type="button">
+        <div class="mini-table" aria-hidden="true">
+          <i class="chip round" style="left:18%;top:40%;width:22px;height:22px;border-radius:50%;background:#f3e2b8"></i>
+          <i class="chip loaf" style="left:48%;top:36%;width:46px;height:16px;background:#e4dfd6;border-radius:4px"></i>
+        </div>
+        <strong>Mesa para dois</strong>
+        <span>2 a 3 pessoas</span>
+      </button>
+      <button class="pick" type="button">
+        <div class="mini-table" aria-hidden="true">
+          <i class="chip" style="left:16%;top:34%;width:54px;height:16px;border-radius:3px;background:#cbbfa8"></i>
+          <i class="chip round" style="left:62%;top:28%;width:24px;height:24px;border-radius:50%;background:#f3e2b8"></i>
+        </div>
+        <strong>Queijos e frios</strong>
+        <span>Cerca de 6 pessoas</span>
+      </button>
+      <button class="pick" type="button">
+        <div class="mini-table" aria-hidden="true">
+          <i class="chip" style="left:12%;top:32%;width:58px;height:14px;border-radius:3px;background:#cbbfa8"></i>
+          <i class="chip loaf" style="left:46%;top:48%;width:40px;height:14px;background:#e4dfd6;border-radius:4px"></i>
+          <i class="chip round" style="left:74%;top:30%;width:20px;height:20px;border-radius:50%;background:#f3e2b8"></i>
+        </div>
+        <strong>Mesa de festa</strong>
+        <span>Cerca de 12 pessoas</span>
+      </button>
+    </aside>
+    <section class="stage">
+      <h2>Monte sua mesa</h2>
+      <div class="table" aria-label="Mesa montada">
+        <div class="piece board" style="left:50%;top:46%;width:46%;height:22%"></div>
+        <div class="piece loaf" style="left:28%;top:28%;width:22%;height:16%"></div>
+        <div class="piece loaf" style="left:74%;top:30%;width:20%;height:15%"></div>
+        <div class="piece platter" style="left:30%;top:70%;width:24%;height:12%"></div>
+        <div class="piece round" style="left:72%;top:68%;width:12%;height:16%"></div>
+      </div>
+    </section>
+    <section class="list" aria-label="Lista da mesa">
+      <h2>A mesa</h2>
+      <p>4 itens selecionados</p>
+      <div class="item">
+        <i class="board" style="display:block;height:28px;border-radius:4px"></i>
+        <div><strong>Tábua de Frios 6 Pessoas</strong><span>R$ 250,00</span></div>
+      </div>
+      <div class="item">
+        <i class="loaf" style="display:block;height:24px;border-radius:4px"></i>
+        <div><strong>Torta Fria Frango</strong><span>R$ 110,00</span></div>
+      </div>
+      <div class="item">
+        <i class="platter" style="display:block;height:20px;border-radius:6px"></i>
+        <div><strong>Canapés</strong><span>R$ 3,00 / unidade</span></div>
+      </div>
+      <div class="item">
+        <i class="round" style="display:block;width:28px;height:28px"></i>
+        <div><strong>Brie Crocante Mel e Nuts P</strong><span>R$ 78,00</span></div>
+      </div>
+      <button class="send" type="button">Enviar pelo WhatsApp</button>
+    </section>
+  </div>
+</body>
+</html>
