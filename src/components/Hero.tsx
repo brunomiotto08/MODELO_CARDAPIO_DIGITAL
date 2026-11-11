@@ -16,7 +16,7 @@ export default function Hero() {
         <div className="hero-visual">
           <img
             className="hero-photo"
-            {...imageAttrs('/images/hero.jpg', '(max-width: 1023px) 100vw, 56vw')}
+            {...imageAttrs('/images/hero/hero.jpg', '(max-width: 1023px) 100vw, 56vw')}
             alt="Mesa posta para um encontro, com salgados, frutas, pães e arranjos de flores"
             fetchPriority="high"
             decoding="async"

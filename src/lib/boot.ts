@@ -5,7 +5,7 @@ function heroUrl() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const display = (viewport <= 1023 ? viewport : viewport * 0.56) * dpr;
   const width = HERO_WIDTHS.find((item) => item >= display) ?? 1920;
-  return `/images/opt/hero-${width}.webp`;
+  return `/images/opt/hero/hero-${width}.webp`;
 }
 
 function loadImage(src: string) {

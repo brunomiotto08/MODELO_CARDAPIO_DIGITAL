@@ -1,5 +1,6 @@
 import type { ImgHTMLAttributes } from 'react';
 import { imageAttrs } from '../lib/images';
+import { onImageError } from '../lib/placeholder';
 
 type PhotoProps = ImgHTMLAttributes<HTMLImageElement> & {
   src: string;
@@ -23,6 +24,7 @@ export default function Photo({
       decoding={decoding ?? 'async'}
       loading={loading ?? (priority ? 'eager' : 'lazy')}
       fetchPriority={fetchPriority ?? (priority ? 'high' : 'auto')}
+      onError={onImageError}
       {...rest}
       {...imageAttrs(src, sizes)}
     />

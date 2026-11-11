@@ -1,3 +1,4 @@
+import { onImageError } from '../lib/placeholder';
 import { footprint, hasCutout, mesaImageSrc, pieceId } from '../data/tablePieces';
 
 type MesaPieceProps = {
@@ -24,7 +25,7 @@ export default function MesaPiece({ id, fill = false }: MesaPieceProps) {
       ].filter(Boolean).join(' ')}
       style={fill ? undefined : { aspectRatio: `${piece.w} / ${piece.h}` }}
     >
-      <img src={mesaImageSrc(key)} alt="" draggable={false} loading="lazy" decoding="async" />
+      <img src={mesaImageSrc(key)} alt="" draggable={false} loading="lazy" decoding="async" onError={onImageError} />
     </span>
   );
 }

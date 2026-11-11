@@ -23,7 +23,7 @@ export default function About() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-        setVideoSrc('/images/video.mp4');
+        setVideoSrc('/images/video/video.mp4');
         observer.disconnect();
       },
       { rootMargin: '240px' },

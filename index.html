@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { background: #f2f2f3; }
+      #root { opacity: 0; }
+      html.is-ready #root {
+        animation: site-fade 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      @keyframes site-fade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html.is-ready #root {
+          animation: none;
+          opacity: 1;
+        }
+      }
+    </style>
+    <link rel="icon" type="image/png" href="/favicon.png?v=2" sizes="64x64" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <meta name="theme-color" content="#f2f2f3" />
+
+    <!--seo:start-->
+    <!-- Bloco gerado por scripts/prerender.mjs para cada rota (fonte: src/seo). Esta versão serve o dev. -->
+    <title>Flor Alecrim | Salgados e Mesas para Eventos em Caxias do Sul</title>
+    <meta name="description" content="Salgados diferenciados, tortas frias, canapés, terrines e mesas de antepastos sob encomenda em Caxias do Sul e na Serra Gaúcha. Veja o cardápio e encomende." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://floralecrim.com.br/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Flor Alecrim | Salgados e Mesas para Eventos em Caxias do Sul" />
+    <meta property="og:description" content="Salgados diferenciados, tortas frias, canapés, terrines e mesas de antepastos sob encomenda em Caxias do Sul e na Serra Gaúcha. Veja o cardápio e encomende." />
+    <meta property="og:url" content="https://floralecrim.com.br/" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Flor Alecrim" />
+    <meta property="og:image" content="https://floralecrim.com.br/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Flor Alecrim. Salgados diferenciados e mesas de antepastos sob encomenda em Caxias do Sul." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Flor Alecrim | Salgados e Mesas para Eventos em Caxias do Sul" />
+    <meta name="twitter:description" content="Salgados diferenciados, tortas frias, canapés, terrines e mesas de antepastos sob encomenda em Caxias do Sul e na Serra Gaúcha. Veja o cardápio e encomende." />
+    <meta name="twitter:image" content="https://floralecrim.com.br/og.jpg" />
+    <meta name="twitter:image:alt" content="Flor Alecrim. Salgados diferenciados e mesas de antepastos sob encomenda em Caxias do Sul." />
+    <!--seo:end-->  </head>
+  <body>
+    <div id="root"><!--app-body--></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

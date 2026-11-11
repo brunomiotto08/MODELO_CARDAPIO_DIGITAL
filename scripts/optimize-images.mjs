@@ -30,7 +30,7 @@ async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = [];
   for (const entry of entries) {
-    if (entry.name === 'opt') continue;
+    if (entry.name === 'opt' || entry.name === 'marca') continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) files.push(...(await walk(full)));
     else if (/\.(jpe?g|png)$/i.test(entry.name)) files.push(full);

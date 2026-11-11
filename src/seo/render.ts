@@ -32,7 +32,7 @@ function seoFor(path: string): SeoRoute {
   return path === notFoundSeo.path ? notFoundSeo : (routeFor(path) ?? notFoundSeo);
 }
 
-const HERO_PRELOAD = `<link rel="preload" as="image" type="image/webp" href="/images/opt/hero-960.webp" imagesrcset="/images/opt/hero-480.webp 480w, /images/opt/hero-960.webp 960w, /images/opt/hero-1440.webp 1440w, /images/opt/hero-1920.webp 1920w" imagesizes="(max-width: 1023px) 100vw, 56vw" fetchpriority="high" />`;
+const HERO_PRELOAD = `<link rel="preload" as="image" type="image/webp" href="/images/opt/hero/hero-960.webp" imagesrcset="/images/opt/hero/hero-480.webp 480w, /images/opt/hero/hero-960.webp 960w, /images/opt/hero/hero-1440.webp 1440w, /images/opt/hero/hero-1920.webp 1920w" imagesizes="(max-width: 1023px) 100vw, 56vw" fetchpriority="high" />`;
 
 /** Bloco de <head> específico da rota, entre os marcadores de index.html. */
 export function renderHead(path: string): string {
@@ -185,7 +185,7 @@ Allow: /
 # Arquivos de trabalho e materiais internos, sem uso nas páginas.
 Disallow: /insta_extracted/
 Disallow: /new_images/
-Disallow: /marca/
+Disallow: /images/marca/
 Disallow: /descriptions/
 
 Sitemap: ${SITE_URL}/sitemap.xml
