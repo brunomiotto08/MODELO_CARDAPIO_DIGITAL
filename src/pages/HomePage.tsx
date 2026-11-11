@@ -7,6 +7,7 @@ import About from '../components/About';
 import Catalog from '../components/Catalog';
 import RealTables from '../components/RealTables';
 import EventsSection from '../components/EventsSection';
+import TestimonialsSection from '../components/TestimonialsSection';
 import HowToOrder from '../components/HowToOrder';
 import ContactInfo from '../components/ContactInfo';
 import Faq from '../components/Faq';
@@ -47,6 +48,7 @@ export default function HomePage() {
       <About />
       <Catalog />
       <RealTables />
+      <TestimonialsSection />
       <EventsSection />
       <HowToOrder />
       <ContactInfo />

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { InstagramLogo } from '@phosphor-icons/react';
 import { brand } from '../data/brand';
 import BrandLogo from './BrandLogo';
+import { footerLinks } from '../config/routes';
 
 export default function Footer() {
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
           <Link
             to="/"
             className="inline-flex self-start transition-opacity hover:opacity-90"
-            aria-label="Flor Alecrim, página inicial"
+            aria-label={`${brand.name}, página inicial`}
           >
             <BrandLogo variant="footer" />
           </Link>
@@ -31,24 +32,15 @@ export default function Footer() {
 
           {/* Links */}
           <nav aria-label="Links do rodapé" className="flex flex-col gap-3 lg:pt-2">
-            <Link
-              to="/cardapio"
-              className="font-sans text-sm text-text transition-colors hover:underline"
-            >
-              Cardápio
-            </Link>
-            <Link
-              to="/monte-sua-mesa"
-              className="font-sans text-sm text-text transition-colors hover:underline"
-            >
-              Monte sua mesa
-            </Link>
-            <Link
-              to="/#como-encomendar"
-              className="font-sans text-sm text-text transition-colors hover:underline"
-            >
-              Como encomendar
-            </Link>
+            {footerLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="font-sans text-sm text-text transition-colors hover:underline"
+              >
+                {link.label}
+              </Link>
+            ))}
             <a
               href={`https://www.instagram.com/${brand.instagram}/`}
               target="_blank"
@@ -68,7 +60,7 @@ export default function Footer() {
             Pedidos sujeitos a confirmação de disponibilidade e condições.
           </p>
           <p className="font-sans text-sm text-text-muted">
-            &copy; {new Date().getFullYear()} Flor Alecrim
+            &copy; {new Date().getFullYear()} {brand.name}
           </p>
         </div>
       </div>

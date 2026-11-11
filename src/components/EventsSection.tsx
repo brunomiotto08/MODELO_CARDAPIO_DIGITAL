@@ -1,14 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight } from '@phosphor-icons/react';
 import WhatsAppCTA from './WhatsAppCTA';
 import Mark from './Mark';
 import Photo from './Photo';
-import { brand } from '../data/brand';
+import PackageCard from './packages/PackageCard';
+import { brand, eventQuoteMessage } from '../data/brand';
 import { eventOffer } from '../data/catalog';
+import { eventPackages } from '../data/packages';
+import { isEnabled } from '../config/features';
 
-const budgetMessage =
-  'Olá! Gostaria de solicitar um orçamento para um evento com a Flor Alecrim.';
+const featured = isEnabled('packages') ? eventPackages.filter((pkg) => pkg.featuredOnHome).slice(0, 3) : [];
 
 export default function EventsSection() {
+  const navigate = useNavigate();
+
   return (
     <section id="eventos" aria-label="Encomendas para eventos" className="events section-pad bg-sage text-text">
       <div className="container-page events-layout">
@@ -38,16 +43,28 @@ export default function EventsSection() {
             <div className="events-foot">
               <p className="events-note">{eventOffer.note}</p>
               <div className="events-actions">
-                <WhatsAppCTA
-                  message={budgetMessage}
-                  label="Solicitar orçamento"
-                  variant="outline"
-                  size="md"
-                  className="events-cta"
-                />
-                <Link to="/monte-sua-mesa" className="events-alt">
-                  Ou monte a mesa por aqui
-                </Link>
+                {isEnabled('quoteWizard') ? (
+                  <Link
+                    to="/orcamento"
+                    className="events-cta inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-sm border border-olive-deep px-6 py-3 font-sans text-sm font-semibold tracking-wide text-olive-deep transition-all duration-200 hover:bg-olive-deep hover:text-ivory active:scale-[0.98]"
+                  >
+                    Solicitar orçamento
+                    <ArrowRight size={16} weight="bold" />
+                  </Link>
+                ) : (
+                  <WhatsAppCTA
+                    message={eventQuoteMessage}
+                    label="Solicitar orçamento"
+                    variant="outline"
+                    size="md"
+                    className="events-cta"
+                  />
+                )}
+                {isEnabled('table') && (
+                  <Link to="/monte-sua-mesa" className="events-alt">
+                    Ou monte a mesa por aqui
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -61,6 +78,24 @@ export default function EventsSection() {
             />
           </figure>
         </div>
+
+        {featured.length > 0 && (
+          <div>
+            <div className="flex flex-wrap items-end justify-between gap-3 border-t border-text/20 pt-6">
+              <h3 className="font-serif text-2xl font-medium text-text">Pacotes prontos</h3>
+              <Link to="/pacotes" className="events-alt">
+                Ver todos os pacotes
+              </Link>
+            </div>
+            <ul className="mt-5 grid gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((pkg) => (
+                <li key={pkg.id}>
+                  <PackageCard pkg={pkg} compact onOpen={(item) => navigate(`/pacotes?pacote=${item.id}`)} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <p className="events-legal">
           Pedidos sob encomenda. Disponibilidade e condições confirmadas no atendimento.

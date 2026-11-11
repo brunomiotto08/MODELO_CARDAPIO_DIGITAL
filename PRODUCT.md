@@ -18,15 +18,20 @@ O site apresenta a Flor Alecrim e o cardápio de encomendas, e deixa a pessoa pr
 
 A mesa é uma prévia de como os itens ficam juntos. O total não fecha no site: quantidades, valores e a data se confirmam no atendimento.
 
+Exceção: a página de Pacotes mostra uma **estimativa** (soma dos preços do cardápio, ou preço por pessoa definido no pacote), sempre rotulada como estimativa e com o aviso de confirmação no atendimento. Ela pode ser desligada em `siteConfig.packages.showPrices`.
+
 ## Operating Context
 
-Três rotas: início, cardápio avulso e Monte sua mesa. O cardápio tem a lista de interesse (Minha lista). A mesa tem a própria composição, com quatro sugestões prontas e os itens de todo o cardápio. Doces e arranjo floral entram como interesse sem valor fechado. O atendimento por WhatsApp é em dias úteis das 8h às 11h30 e das 13h30 às 18h, e aos sábados das 8h às 11h.
+Rotas (cada uma liga/desliga em `src/config/site.config.ts`): início, cardápio avulso, Monte sua mesa, Pacotes para eventos, Orçamento guiado e Eventos realizados. O cardápio tem a lista de interesse (Minha lista). A mesa tem a própria composição, com quatro sugestões prontas e os itens de todo o cardápio. Doces e arranjo floral entram como interesse sem valor fechado. O atendimento por WhatsApp é em dias úteis das 8h às 11h30 e das 13h30 às 18h, e aos sábados das 8h às 11h.
 
 ## Capabilities and Constraints
 
 - Catálogo, preços e rendimentos vêm de `src/data/catalog.ts` e de `public/descriptions/cardapio.txt`.
 - A mensagem da mesa é montada em `src/data/brand.ts` e abre `wa.me` com o número já configurado.
 - Não há checkout, conta de cliente nem estoque.
+- Configuração do cliente (marca, contato, features, textos do WhatsApp) em `src/config/site.config.ts`; páginas em `src/config/routes.ts`. Ver `CLONE.md`.
+- Lista e mesa ficam salvas no navegador (feature `persistence`); a mesa pode ser compartilhada por link (`shareTable`).
+- Depoimentos só reais, em `src/data/testimonials.ts`. Com a lista vazia, a seção não aparece no site publicado.
 - Cada produto na mesa aparece uma vez. A quantidade fica na lista, não vira várias peças.
 - As miniaturas vistas de cima ainda não estão no repositório. Até o arquivo existir, a peça é uma silhueta do formato em que o produto é servido. Não se inventa foto de comida.
 - A interface já observa `prefers-reduced-motion`.
@@ -42,6 +47,6 @@ Fotos reais dos produtos em `public/images/products` e mesas de evento em `publi
 ## Product Principles
 
 - A mesa mostra o produto como ele é servido.
-- Preço e data se confirmam na conversa, não numa soma fechada.
+- Preço e data se confirmam na conversa, não numa soma fechada. Estimativas, quando aparecem, dizem que são estimativas.
 - A lista do cardápio e a lista da mesa não se misturam.
 - O que não tem imagem permanece uma silhueta, sem desenho no lugar da comida.

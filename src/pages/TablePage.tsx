@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useLenis } from 'lenis/react';
 import { ArrowLeft, ArrowRight, X } from '@phosphor-icons/react';
 import { scrollWithLenis } from '../components/SmoothScroll';
@@ -14,6 +14,9 @@ import OfferModal from '../components/OfferModal';
 import OfferTile from '../components/OfferTile';
 import TableStage from '../components/TableStage';
 import TableListPanel from '../components/TableListPanel';
+import QuantityCalculator from '../components/QuantityCalculator';
+import { isEnabled } from '../config/features';
+import { decodeTable, encodeTable, SHARE_PARAM, type SharedTable } from '../lib/shareTable';
 import { useSeo } from '../seo/useSeo';
 
 function samePlateSet(left: readonly string[], right: readonly string[]): boolean {
@@ -52,8 +55,53 @@ export default function TablePage() {
     getQuantity,
     setSweets,
     setFlowers,
+    loadTable,
     count,
   } = useTable();
+  const [params, setParams] = useSearchParams();
+  const sharedParam = isEnabled('shareTable') ? params.get(SHARE_PARAM) : null;
+  const [pendingShared, setPendingShared] = useState<SharedTable | null>(null);
+
+  const currentTable = { plateIds, quantities: Object.fromEntries(plateIds.map((id) => [id, getQuantity(id) ?? 0])), sweets, flowers };
+  const currentRef = useRef(currentTable);
+  currentRef.current = currentTable;
+
+  // Mesa compartilhada (?m=...): carrega direto se a mesa atual está vazia; senão, pergunta.
+  useEffect(() => {
+    if (!sharedParam) return;
+    const shared = decodeTable(sharedParam);
+    const current = currentRef.current;
+    const empty = current.plateIds.length === 0 && !current.sweets && !current.flowers;
+    const clearParam = () => {
+      const next = new URLSearchParams(params);
+      next.delete(SHARE_PARAM);
+      setParams(next, { replace: true, preventScrollReset: true });
+    };
+    if (!shared) {
+      clearParam();
+      return;
+    }
+    if (empty) {
+      loadTable(shared);
+      clearParam();
+      return;
+    }
+    if (encodeTable(shared) === encodeTable(current)) {
+      clearParam();
+      return;
+    }
+    setPendingShared(shared);
+    // Só reage ao parâmetro da URL.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharedParam]);
+
+  const resolveShared = (accept: boolean) => {
+    if (accept && pendingShared) loadTable(pendingShared);
+    setPendingShared(null);
+    const next = new URLSearchParams(params);
+    next.delete(SHARE_PARAM);
+    setParams(next, { replace: true, preventScrollReset: true });
+  };
 
   const openList = () => {
     if (!sheet) setListOpen(true);
@@ -207,6 +255,45 @@ export default function TablePage() {
       <div className="table-menu">
         <div>
           <div>
+            {pendingShared && (
+              <section aria-label="Mesa compartilhada" className="mb-6 border border-olive-deep bg-cream p-4">
+                <h2 className="font-serif text-lg font-medium text-text">Você abriu uma mesa compartilhada</h2>
+                <p className="mt-1 font-sans text-sm leading-relaxed text-text-muted">
+                  Ela tem {pendingShared.plateIds.length} {pendingShared.plateIds.length === 1 ? 'item' : 'itens'}. Carregar substitui a mesa que você já montou.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => resolveShared(true)}
+                    className="rounded-sm bg-olive-deep px-4 py-2 font-sans text-sm font-semibold text-ivory transition-colors hover:bg-olive-mid"
+                  >
+                    Carregar esta mesa
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => resolveShared(false)}
+                    className="rounded-sm border border-beige px-4 py-2 font-sans text-sm font-semibold text-text transition-colors hover:border-olive-deep"
+                  >
+                    Manter a minha
+                  </button>
+                </div>
+              </section>
+            )}
+
+            <QuantityCalculator
+              className="mb-8"
+              keys={plateIds}
+              applyLabel="Aplicar quantidades na mesa"
+              applyDefaultLabel="Montar a mesa com esta sugestão"
+              onApply={(items) => {
+                applyPlates(
+                  items.map((item) => item.key),
+                  Object.fromEntries(items.map((item) => [item.key, item.quantity])),
+                );
+                openList();
+              }}
+            />
+
             <section aria-label="Sugestões prontas" className="mb-8">
               <h2 className="font-serif text-2xl font-medium text-text">Sugestões prontas</h2>
               <p className="mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-text-muted">

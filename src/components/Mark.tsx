@@ -8,12 +8,12 @@ type MarkProps = {
 
 const sources = {
   flor: {
-    color: '/images/logos/micros/flor.png',
-    white: '/images/logos/micros/flor-white.png',
+    color: '/images/logos/micros/flower-purple.png',
+    white: '/images/logos/micros/flower-white.png',
   },
   espatula: {
-    color: '/images/logos/micros/fue.png',
-    white: '/images/logos/micros/fue.png',
+    color: '/images/logos/micros/whisk.png',
+    white: '/images/logos/micros/whisk.png',
   },
 };
 

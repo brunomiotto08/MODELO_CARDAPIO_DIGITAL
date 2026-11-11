@@ -38,9 +38,14 @@ export type BrandHours = {
 export type BrandConfig = {
   name: string;
   whatsapp: string;
+  phoneDisplay: string;
   instagram: string;
   city: string;
   region: string;
   serviceArea: string[];
   hours: BrandHours;
+  leadTimeHours: number;
+  eventMinimumGuests: number;
+  pickup?: string;
+  paymentMethods: string[];
 };

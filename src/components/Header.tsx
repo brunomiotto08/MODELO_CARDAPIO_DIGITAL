@@ -5,7 +5,8 @@ import { AnimatePresence, motion, useReducedMotion, useScroll, useMotionValueEve
 import { useOrder } from '../context/OrderContext';
 import WhatsAppCTA from './WhatsAppCTA';
 import BrandLogo from './BrandLogo';
-import { buildWhatsAppLink, genericOrderMessage } from '../data/brand';
+import { brand, buildWhatsAppLink, genericOrderMessage } from '../data/brand';
+import { headerLinks } from '../config/routes';
 
 function RevealSlot({ open, children }: { open: boolean; children: ReactNode }) {
   return (
@@ -27,12 +28,7 @@ function RevealSlot({ open, children }: { open: boolean; children: ReactNode }) 
 
 const menuEase = [0.22, 1, 0.36, 1] as const;
 
-const navLinks = [
-  { label: 'Início', to: '/' },
-  { label: 'Cardápio', to: '/cardapio' },
-  { label: 'Monte sua mesa', to: '/monte-sua-mesa' },
-  { label: 'Como encomendar', to: '/#como-encomendar' },
-];
+const navLinks = headerLinks;
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -63,7 +59,7 @@ export default function Header() {
               to="/"
               onClick={() => setMobileOpen(false)}
               className="flex items-center hover:opacity-80 transition-opacity"
-              aria-label="Flor Alecrim, página inicial"
+              aria-label={`${brand.name}, página inicial`}
             >
               <BrandLogo />
             </Link>

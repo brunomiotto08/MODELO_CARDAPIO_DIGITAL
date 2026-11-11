@@ -54,7 +54,7 @@ function organization(): Json {
     },
     areaServed: brand.serviceArea.map(city),
     sameAs: [`https://www.instagram.com/${brand.instagram}/`],
-    paymentAccepted: 'Dinheiro, Pix, Cartão (pago por link)',
+    paymentAccepted: brand.paymentMethods.join(', '),
     currenciesAccepted: 'BRL',
     knowsLanguage: LOCALE,
     contactPoint: {

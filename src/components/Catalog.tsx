@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from '@phosphor-icons/react';
 import Mark from './Mark';
 import Photo from './Photo';
+import { isEnabled } from '../config/features';
+
+const bentoCta = isEnabled('table')
+  ? { to: '/monte-sua-mesa', title: 'Monte sua mesa', note: 'Os antepastos aparecem na mesa.' }
+  : isEnabled('packages')
+    ? { to: '/pacotes', title: 'Pacotes para eventos', note: 'Escolha o pacote e o número de convidados.' }
+    : null;
 
 type Frame = 'feature' | 'tall' | 'tile';
 
@@ -291,7 +298,7 @@ export default function Catalog() {
 
   return (
     <section id="cardapio" aria-label="Nosso cardápio" className="section-pad bg-ivory">
-      <Link
+      {isEnabled('menu') && <Link
         to="/cardapio"
         className={`menu-follow${following ? ' is-on' : ''}`}
         tabIndex={following ? 0 : -1}
@@ -301,7 +308,7 @@ export default function Catalog() {
         <span className="menu-follow-arrow" aria-hidden="true">
           <ArrowRight size={20} weight="bold" />
         </span>
-      </Link>
+      </Link>}
 
       <div className="container-page">
         <div className="mb-10 max-w-[38rem] md:mb-12">
@@ -335,15 +342,15 @@ export default function Catalog() {
             </figure>
           ))}
 
-          <Link to="/monte-sua-mesa" className="menu-bento-cta b-cta is-feature">
-            <span className="menu-bento-cta-title">
-              Monte sua mesa
-              <ArrowRight size={18} weight="bold" aria-hidden="true" />
-            </span>
-            <span className="menu-bento-cta-note">
-              Os antepastos aparecem na mesa.
-            </span>
-          </Link>
+          {bentoCta && (
+            <Link to={bentoCta.to} className="menu-bento-cta b-cta is-feature">
+              <span className="menu-bento-cta-title">
+                {bentoCta.title}
+                <ArrowRight size={18} weight="bold" aria-hidden="true" />
+              </span>
+              <span className="menu-bento-cta-note">{bentoCta.note}</span>
+            </Link>
+          )}
         </div>
       </div>
     </section>

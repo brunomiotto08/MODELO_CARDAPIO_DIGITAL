@@ -1,6 +1,12 @@
 import { brand } from '../data/brand';
 import { categories, eventOffer, products } from '../data/catalog';
 import { tableSuggestions } from '../data/table';
+import { eventPackages, packageStartingPrice } from '../data/packages';
+import { galleryItems } from '../data/gallery';
+import { eventTypes } from '../data/events';
+import { headerLinks, routeEnabled, routes as appRoutes } from '../config/routes';
+import { siteConfig } from '../config/site.config';
+import { formatBRL } from '../lib/money';
 import { buildJsonLd } from './schema';
 import {
   DEFAULT_OG_IMAGE,
@@ -74,7 +80,14 @@ export function renderHead(path: string): string {
 }
 
 const li = (html: string) => `<li>${html}</li>`;
-const link = (href: string, label: string) => `<a href="${href}">${escapeHtml(label)}</a>`;
+/** Link interno só quando a página existe para este cliente; senão, texto simples. */
+const link = (href: string, label: string) =>
+  routeEnabled(href) ? `<a href="${href}">${escapeHtml(label)}</a>` : escapeHtml(label);
+
+/** Junta links/textos opcionais, descartando os vazios. */
+const joinLinks = (items: string[], separator = ' · ') => items.filter(Boolean).join(separator);
+const ifEnabled = (path: string, html: string) => (routeEnabled(path) ? html : '');
+const lead = brand.leadTimeHours;
 
 function productItems(category: string): string {
   return products
@@ -107,6 +120,15 @@ function eventsBlock(headingLevel: 'h2' = 'h2'): string {
     .join('')}</ul><p>${escapeHtml(eventOffer.note)} ${escapeHtml(eventOffer.minimum)}</p></section>`;
 }
 
+function packagesTeaser(): string {
+  if (!routeEnabled('/pacotes')) return '';
+  const featured = eventPackages.filter((pkg) => pkg.featuredOnHome);
+  if (!featured.length) return '';
+  return `<section><h2>Pacotes prontos</h2><ul>${featured
+    .map((pkg) => li(`${escapeHtml(pkg.name)}: ${escapeHtml(pkg.tagline)}`))
+    .join('')}</ul><p>${link('/pacotes', 'Ver todos os pacotes')}</p></section>`;
+}
+
 function faqBlock(): string {
   return `<section id="perguntas-frequentes"><h2>Perguntas frequentes</h2>${faqs
     .map((faq) => `<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`)
@@ -117,21 +139,22 @@ function bodyFor(path: string): string {
   if (path === '/') {
     return `<h1>Pequenos detalhes. Grandes momentos à mesa.</h1>
 <p>A ${SITE_NAME} faz salgados, antepastos e mesas para eventos sob encomenda em Caxias do Sul, RS. Você escolhe os itens, e a gente confirma quantidades e valores pelo WhatsApp.</p>
-<p>${link('/monte-sua-mesa', 'Monte sua mesa')} · ${link('/cardapio', 'Cardápio avulso')}</p>
+<p>${joinLinks([ifEnabled('/monte-sua-mesa', link('/monte-sua-mesa', 'Monte sua mesa')), ifEnabled('/pacotes', link('/pacotes', 'Pacotes para eventos')), ifEnabled('/cardapio', link('/cardapio', 'Cardápio avulso'))])}</p>
 <section><h2>Feitos para compartilhar à mesa.</h2><p>Salgados para o encontro e para a comemoração. Ingredientes de altíssima qualidade, cuidado no preparo, produção artesanal e sob encomenda. Atendemos a ${brand.region}.</p></section>
-<section id="cardapio"><h2>Nosso cardápio</h2><p>Mesas de evento, em fotos reais. Os valores ficam no ${link('/cardapio', 'cardápio avulso')}, e a composição fica em ${link('/monte-sua-mesa', 'Monte sua mesa')}.</p><ul>${categories
+<section id="cardapio"><h2>Nosso cardápio</h2><p>Mesas de evento, em fotos reais. Os valores ficam no ${link('/cardapio', 'cardápio avulso')}${ifEnabled('/monte-sua-mesa', `, e a composição fica em ${link('/monte-sua-mesa', 'Monte sua mesa')}`)}.</p><ul>${categories
       .filter((category) => category.slug !== 'todos')
       .map((category) => li(escapeHtml(category.name)))
       .join('')}</ul></section>
 ${eventsBlock()}
-<section id="como-encomendar"><h2>Como encomendar</h2><ol><li>Escolha o caminho: monte a mesa do evento ou faça um pedido avulso.</li><li>Entre em contato pelo WhatsApp ${escapeHtml(PHONE_DISPLAY)}.</li><li>Combine os detalhes: produtos, quantidades, pagamento e data. Prazo mínimo de 48 horas.</li></ol></section>
+${packagesTeaser()}
+<section id="como-encomendar"><h2>Como encomendar</h2><ol><li>Escolha o caminho: monte a mesa do evento ou faça um pedido avulso.</li><li>Entre em contato pelo WhatsApp ${escapeHtml(PHONE_DISPLAY)}.</li><li>Combine os detalhes: produtos, quantidades, pagamento e data. Prazo mínimo de ${lead} horas.</li></ol></section>
 ${faqBlock()}`;
   }
 
   if (path === '/cardapio') {
     return `<p>${link('/', 'Voltar ao início')}</p>
 <h1>Cardápio</h1>
-<p>Salgados, tortas frias, canapés, terrines e tábuas de frios sob encomenda em Caxias do Sul. Pedidos avulsos, para retirar e servir em casa. Prefere uma mesa para o evento? ${link('/monte-sua-mesa', 'Monte sua mesa')}.</p>
+<p>Salgados, tortas frias, canapés, terrines e tábuas de frios sob encomenda em Caxias do Sul. Pedidos avulsos, para retirar e servir em casa. ${ifEnabled('/monte-sua-mesa', `Prefere uma mesa para o evento? ${link('/monte-sua-mesa', 'Monte sua mesa')}.`)} ${ifEnabled('/pacotes', `Veja também os ${link('/pacotes', 'pacotes para eventos')}.`)}</p>
 ${menuCategories()}
 ${eventsBlock()}`;
   }
@@ -147,6 +170,35 @@ ${eventsBlock()}`;
 <section><h2>Também na mesa</h2><p>Doces e arranjo floral saem prontos. Entram no pedido sem valor fechado.</p></section>`;
   }
 
+  if (path === '/pacotes') {
+    return `<p>${link('/', 'Voltar ao início')}</p>
+<h1>Pacotes para eventos</h1>
+<p>Combinações prontas para cada tipo de evento. Escolha o pacote, informe o número de convidados e veja a composição${siteConfig.packages.showPrices ? ' e a estimativa de valor' : ''}. A ${SITE_NAME} confirma tudo pelo WhatsApp. Eventos a partir de ${brand.eventMinimumGuests} pessoas, prazo mínimo de ${lead} horas.</p>
+<ul>${eventPackages.map((pkg) => {
+      const price = packageStartingPrice(pkg);
+      const priceText = price !== null ? ` Cerca de ${formatBRL(price)} por pessoa.` : ' Valor sob consulta.';
+      return li(`<h2>${escapeHtml(pkg.name)}</h2><p>${escapeHtml(`${pkg.tagline} De ${pkg.minGuests} a ${pkg.maxGuests} convidados.${priceText}`)}</p>`);
+    }).join('')}</ul>
+<p>${escapeHtml(siteConfig.packages.priceDisclaimer)}</p>
+<p>${joinLinks([ifEnabled('/orcamento', link('/orcamento', 'Pedir orçamento')), ifEnabled('/monte-sua-mesa', link('/monte-sua-mesa', 'Monte sua mesa'))])}</p>`;
+  }
+
+  if (path === '/orcamento') {
+    return `<p>${link('/', 'Voltar ao início')}</p>
+<h1>Orçamento de evento</h1>
+<p>Seis passos rápidos: tipo de evento, data e horário, número de convidados, local, cardápio e resumo. No fim, a ${SITE_NAME} recebe o briefing completo pelo WhatsApp e responde com a proposta.</p>
+<section><h2>Tipos de evento</h2><ul>${eventTypes.map((type) => li(escapeHtml(type.label))).join('')}</ul></section>
+<section><h2>Prazo e área de atendimento</h2><p>Encomendas com no mínimo ${lead} horas de antecedência. Entrega em ${escapeHtml(brand.serviceArea.join(', '))} e na ${brand.region}.</p></section>`;
+  }
+
+  if (path === '/eventos-realizados') {
+    return `<p>${link('/', 'Voltar ao início')}</p>
+<h1>Eventos realizados</h1>
+<p>Mesas e coquetéis montados pela ${SITE_NAME}, em fotos reais.</p>
+<ul>${galleryItems.map((item) => li(escapeHtml(item.alt))).join('')}</ul>
+<p>${joinLinks([ifEnabled('/orcamento', link('/orcamento', 'Pedir orçamento')), ifEnabled('/pacotes', link('/pacotes', 'Ver pacotes'))])}</p>`;
+  }
+
   return `<h1>Página não encontrada</h1>
 <p>O endereço que você abriu não existe. Volte ao ${link('/', 'início')} ou veja o ${link('/cardapio', 'cardápio')}.</p>`;
 }
@@ -157,7 +209,8 @@ ${eventsBlock()}`;
  * ele existe para crawlers que não executam JavaScript.
  */
 export function renderBody(path: string): string {
-  return `<header><nav aria-label="Navegação principal"><a href="/">Início</a> <a href="/cardapio">Cardápio</a> <a href="/monte-sua-mesa">Monte sua mesa</a> <a href="/#como-encomendar">Como encomendar</a></nav></header>
+  const nav = headerLinks.map((item) => `<a href="${item.to}">${escapeHtml(item.label)}</a>`).join(' ');
+  return `<header><nav aria-label="Navegação principal">${nav}</nav></header>
 <main>
 ${bodyFor(path)}
 </main>
@@ -200,12 +253,10 @@ export function renderLlmsTxt(): string {
     .join('\n');
   return `# ${SITE_NAME}
 
-> ${SITE_NAME} faz salgados diferenciados, tortas frias, canapés, terrines, tábuas de frios e mesas de antepastos sob encomenda em ${brand.city}, com atendimento na ${brand.region} (${brand.serviceArea.join(', ')}). Pedidos pelo WhatsApp ${PHONE_DISPLAY}, com prazo mínimo de 48 horas. Não há loja física nem pronta entrega.
+> ${SITE_NAME} faz salgados diferenciados, tortas frias, canapés, terrines, tábuas de frios e mesas de antepastos sob encomenda em ${brand.city}, com atendimento na ${brand.region} (${brand.serviceArea.join(', ')}). Pedidos pelo WhatsApp ${PHONE_DISPLAY}, com prazo mínimo de ${lead} horas. Não há loja física nem pronta entrega.
 
 ## Páginas
-- [Início](${absoluteUrl('/')}): apresentação, eventos, como encomendar e perguntas frequentes.
-- [Cardápio](${absoluteUrl('/cardapio')}): produtos com valores, tamanhos e pedidos mínimos.
-- [Monte sua mesa](${absoluteUrl('/monte-sua-mesa')}): visualização da mesa do evento e envio da lista pelo WhatsApp.
+${appRoutes.map((route) => `- [${route.name}](${absoluteUrl(route.path)}): ${route.description}`).join('\n')}
 
 ## Categorias do cardápio
 ${menu}
@@ -213,8 +264,8 @@ ${menu}
 ## Informações práticas
 - Atendimento no WhatsApp: segunda a sexta, 8h às 11h30 e 13h30 às 18h; sábado, 8h às 11h.
 - Entrega na Serra Gaúcha; retirada no bairro Galópolis, em Caxias do Sul, com horário agendado.
-- Eventos: mínimo de 15 pessoas, cardápio personalizado.
-- Pagamento: dinheiro, Pix ou cartão (por link).
+- Eventos: mínimo de ${brand.eventMinimumGuests} pessoas, cardápio personalizado.
+- Pagamento: ${brand.paymentMethods.join(', ')}.
 - Instagram: https://www.instagram.com/${brand.instagram}/
 `;
 }

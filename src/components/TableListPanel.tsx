@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { ArrowRight, Trash, X } from '@phosphor-icons/react';
+import { ArrowRight, Check, ShareNetwork, Trash, X } from '@phosphor-icons/react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { linePrice, menuLine, type MenuLine } from '../data/offers';
 import { useTable } from '../context/TableContext';
@@ -116,7 +116,26 @@ export default function TableListPanel({ open, onClose }: TableListPanelProps) {
     setSweets,
     setFlowers,
     whatsappLink,
+    shareUrl,
   } = useTable();
+  const [shareState, setShareState] = useState<'idle' | 'copied' | 'failed'>('idle');
+
+  const shareTable = async () => {
+    if (!shareUrl) return;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Minha mesa', text: 'Veja a mesa que montei:', url: shareUrl });
+        return;
+      }
+      await navigator.clipboard.writeText(shareUrl);
+      setShareState('copied');
+    } catch (error) {
+      // Cancelar o menu de compartilhamento não é erro.
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      setShareState('failed');
+    }
+    window.setTimeout(() => setShareState('idle'), 2200);
+  };
   const reduce = useReducedMotion();
   const [sheet, setSheet] = useState(
     () => window.matchMedia('(max-width: 1099px)').matches,
@@ -246,6 +265,16 @@ export default function TableListPanel({ open, onClose }: TableListPanelProps) {
                   className="flex w-full cursor-not-allowed items-center justify-center rounded-sm bg-olive-deep/40 px-4 py-2.5 font-sans text-sm font-semibold text-ivory"
                 >
                   Enviar pelo WhatsApp
+                </button>
+              )}
+              {shareUrl && (
+                <button
+                  type="button"
+                  onClick={shareTable}
+                  className="flex w-full items-center justify-center gap-2 rounded-sm border border-olive-deep px-4 py-2 font-sans text-sm font-semibold text-olive-deep transition-colors hover:bg-olive-deep hover:text-ivory"
+                >
+                  {shareState === 'copied' ? <Check size={15} weight="bold" /> : <ShareNetwork size={15} weight="bold" />}
+                  {shareState === 'copied' ? 'Link copiado' : shareState === 'failed' ? 'Não foi possível copiar' : 'Compartilhar mesa'}
                 </button>
               )}
               <button

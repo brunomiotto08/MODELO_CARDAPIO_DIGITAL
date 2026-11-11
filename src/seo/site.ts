@@ -1,4 +1,6 @@
 import { brand } from '../data/brand';
+import { siteConfig } from '../config/site.config';
+import { routes as appRoutes } from '../config/routes';
 
 /**
  * Fonte única de verdade do SEO do site (metadados, FAQ e identidade da marca).
@@ -6,18 +8,18 @@ import { brand } from '../data/brand';
  * (useSeo) e no pré-render de build (scripts/prerender.mjs).
  *
  * Domínio canônico: sem "www". O vercel.json redireciona www -> apex (301).
+ * Títulos e descrições das páginas ficam em src/config/routes.ts.
  */
-export const SITE_URL = 'https://floralecrim.com.br';
+export const SITE_URL = siteConfig.site.url;
 export const SITE_NAME = brand.name;
 export const LOCALE = 'pt-BR';
-export const DEFAULT_OG_IMAGE = '/og.jpg';
-export const DEFAULT_OG_IMAGE_ALT =
-  'Flor Alecrim. Salgados diferenciados e mesas de antepastos sob encomenda em Caxias do Sul.';
+export const DEFAULT_OG_IMAGE = siteConfig.site.ogImage;
+export const DEFAULT_OG_IMAGE_ALT = siteConfig.site.ogImageAlt;
 
 export const ROBOTS_INDEX = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 export const ROBOTS_NOINDEX = 'noindex, follow';
 
-export const PHONE_DISPLAY = '(54) 99956-3067';
+export const PHONE_DISPLAY = brand.phoneDisplay;
 export const PHONE_E164 = `+${brand.whatsapp}`;
 
 export type SeoRoute = {
@@ -29,38 +31,20 @@ export type SeoRoute = {
   indexable: boolean;
 };
 
-export const routes: SeoRoute[] = [
-  {
-    path: '/',
-    name: 'Início',
-    title: 'Flor Alecrim | Salgados e Mesas para Eventos em Caxias do Sul',
-    description:
-      'Salgados diferenciados, tortas frias, canapés, terrines e mesas de antepastos sob encomenda em Caxias do Sul e na Serra Gaúcha. Veja o cardápio e encomende.',
-    indexable: true,
-  },
-  {
-    path: '/cardapio',
-    name: 'Cardápio',
-    title: 'Cardápio de Salgados e Encomendas em Caxias do Sul | Flor Alecrim',
-    description:
-      'Cardápio com valores: tortas frias, prensadinhos, canapés, terrines, mini folhados, brie crocante, mini lanches e tábuas de frios. Encomende em Caxias do Sul, RS.',
-    indexable: true,
-  },
-  {
-    path: '/monte-sua-mesa',
-    name: 'Monte sua mesa',
-    title: 'Monte sua Mesa de Antepastos para Eventos | Flor Alecrim',
-    description:
-      'Escolha antepastos, salgados e queijos e visualize a mesa do seu evento. Envie a lista pelo WhatsApp e a Flor Alecrim confirma quantidades, valores e data.',
-    indexable: true,
-  },
-];
+/** Somente as rotas com feature ligada (ver src/config/routes.ts). */
+export const routes: SeoRoute[] = appRoutes.map(({ path, title, description, name, indexable }) => ({
+  path,
+  title,
+  description,
+  name,
+  indexable,
+}));
 
 export const notFoundSeo: SeoRoute = {
   path: '/404',
   name: 'Página não encontrada',
-  title: 'Página não encontrada | Flor Alecrim',
-  description: 'A página que você procura não existe. Volte ao início ou veja o cardápio da Flor Alecrim.',
+  title: `Página não encontrada | ${brand.name}`,
+  description: `A página que você procura não existe. Volte ao início ou veja o cardápio da ${brand.name}.`,
   indexable: false,
 };
 

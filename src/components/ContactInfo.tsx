@@ -23,7 +23,7 @@ const pieces = [
   },
   {
     label: 'Prazo',
-    value: 'Mínimo de 48 horas',
+    value: `Mínimo de ${brand.leadTimeHours} horas`,
     note: 'Sem pronta entrega. A data se confirma no atendimento.',
     tone: 'sage',
   },

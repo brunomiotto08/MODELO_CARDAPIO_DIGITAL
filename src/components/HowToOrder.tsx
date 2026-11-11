@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import Mark from './Mark';
+import { brand } from '../data/brand';
+import { isEnabled } from '../config/features';
 
 const steps = [
   {
@@ -18,7 +20,7 @@ const steps = [
     num: '03',
     title: 'Combine os detalhes',
     description:
-      'Confirme produtos, quantidades, pagamento e a data. O prazo mínimo é de 48 horas.',
+      `Confirme produtos, quantidades, pagamento e a data. O prazo mínimo é de ${brand.leadTimeHours} horas.`,
   },
 ];
 
@@ -36,21 +38,29 @@ export default function HowToOrder() {
             <Mark name="espatula" />
           </h2>
           <p className="mt-5 font-sans text-base leading-relaxed text-text-muted">
-            Simples e direto. Os dois caminhos terminam no WhatsApp, sempre com confirmação da equipe.
+            Simples e direto. Todos os caminhos terminam no WhatsApp, sempre com confirmação da equipe.
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
-            <Link
+            {isEnabled('table') && <Link
               to="/monte-sua-mesa"
               className="inline-flex items-center justify-center rounded-full bg-olive-deep px-6 py-2.5 font-sans text-sm font-semibold text-ivory transition-colors duration-200 hover:bg-olive-mid active:scale-[0.98]"
             >
               Monte sua mesa
-            </Link>
-            <Link
+            </Link>}
+            {isEnabled('packages') && (
+              <Link
+                to="/pacotes"
+                className="inline-flex items-center justify-center rounded-full border border-olive-deep/30 bg-ivory px-6 py-2.5 font-sans text-sm font-semibold text-olive-deep transition-colors duration-200 hover:border-olive-deep hover:bg-beige active:scale-[0.98]"
+              >
+                Pacotes para eventos
+              </Link>
+            )}
+            {isEnabled('menu') && <Link
               to="/cardapio"
               className="inline-flex items-center justify-center rounded-full border border-olive-deep/30 bg-ivory px-6 py-2.5 font-sans text-sm font-semibold text-olive-deep transition-colors duration-200 hover:border-olive-deep hover:bg-beige active:scale-[0.98]"
             >
               Cardápio avulso
-            </Link>
+            </Link>}
           </div>
         </div>
 
@@ -76,7 +86,7 @@ export default function HowToOrder() {
         </ol>
 
         <p className="mt-14 max-w-[62ch] border-t border-beige pt-6 font-sans text-sm leading-relaxed text-text-muted md:mt-16">
-          Encomendas com no mínimo 48 horas de antecedência. Não trabalhamos com pronta entrega.
+          Encomendas com no mínimo {brand.leadTimeHours} horas de antecedência. Não trabalhamos com pronta entrega.
           Pagamento em dinheiro, Pix ou cartão por link. A data e o valor se confirmam no WhatsApp.
         </p>
       </div>

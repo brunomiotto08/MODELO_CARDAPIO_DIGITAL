@@ -11,11 +11,14 @@ import Mark from '../components/Mark';
 import WhatsAppCTA from '../components/WhatsAppCTA';
 import OfferModal from '../components/OfferModal';
 import OfferTile from '../components/OfferTile';
+import QuantityCalculator from '../components/QuantityCalculator';
+import { eventQuoteMessage } from '../data/brand';
+import { isEnabled } from '../config/features';
 import { useSeo } from '../seo/useSeo';
 
 export default function MenuPage() {
   useSeo('/cardapio');
-  const { addLine, orderItems, getQuantity } = useOrder();
+  const { addLine, orderItems, getQuantity, openPanel } = useOrder();
   const [category, setCategory] = useState('todos');
   const [shownCategory, setShownCategory] = useState('todos');
   const [fading, setFading] = useState(false);
@@ -116,16 +119,33 @@ export default function MenuPage() {
             <p className="mt-3 max-w-[46ch] font-sans text-sm leading-relaxed text-text-muted">
               Salgados, tortas frias, canapés, terrines e tábuas de frios sob encomenda em Caxias do Sul. Pedidos avulsos, para retirar ou receber em casa. Toque em um item para escolher tamanho, sabor ou quantidade.
             </p>
-            <p className="mt-5 font-sans text-sm text-text-muted">
-              Prefere uma mesa para o evento?
-            </p>
-            <Link
-              to="/monte-sua-mesa"
-              className="mt-3 inline-flex items-center justify-center gap-2 rounded-sm bg-olive-deep px-5 py-2.5 font-sans text-sm font-semibold tracking-wide text-ivory transition-colors duration-200 hover:bg-olive-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-deep focus-visible:ring-offset-2"
-            >
-              Monte sua mesa
-              <ArrowRight size={16} weight="bold" />
-            </Link>
+            {(isEnabled('table') || isEnabled('packages')) && (
+              <>
+                <p className="mt-5 font-sans text-sm text-text-muted">
+                  {isEnabled('table') ? 'Prefere uma mesa para o evento?' : 'Vai fazer um evento?'}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-4">
+                  {isEnabled('table') && (
+                    <Link
+                      to="/monte-sua-mesa"
+                      className="inline-flex items-center justify-center gap-2 rounded-sm bg-olive-deep px-5 py-2.5 font-sans text-sm font-semibold tracking-wide text-ivory transition-colors duration-200 hover:bg-olive-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-deep focus-visible:ring-offset-2"
+                    >
+                      Monte sua mesa
+                      <ArrowRight size={16} weight="bold" />
+                    </Link>
+                  )}
+                  {isEnabled('packages') && (
+                    <Link
+                      to="/pacotes"
+                      className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-olive-deep"
+                    >
+                      Pacotes para eventos
+                      <ArrowRight size={16} weight="bold" />
+                    </Link>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -245,17 +265,40 @@ export default function MenuPage() {
         </ul>
         </div>
 
+        <QuantityCalculator
+          className="mt-12"
+          keys={orderItems}
+          applyLabel="Aplicar quantidades na lista"
+          applyDefaultLabel="Adicionar esta sugestão à lista"
+          onApply={(items) => {
+            for (const item of items) addLine(item.key, item.quantity);
+            openPanel();
+          }}
+        />
+
         <section id="menu-eventos" className="mt-12 border-t border-beige pt-8">
           <h2 className="font-serif text-2xl font-medium text-text">{eventOffer.title}</h2>
           <p className="mt-3 max-w-[62ch] font-sans text-sm leading-relaxed text-text-muted">
             {eventOffer.types.join(', ')}. {eventOffer.note} {eventOffer.minimum}
           </p>
-          <div className="mt-4">
-            <WhatsAppCTA
-              message="Olá! Gostaria de solicitar um orçamento para um evento com a Flor Alecrim."
-              label="Solicitar orçamento"
-              size="sm"
-            />
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            {isEnabled('quoteWizard') ? (
+              <Link
+                to="/orcamento"
+                className="inline-flex items-center justify-center gap-2 rounded-sm bg-sage px-4 py-2 font-sans text-sm font-semibold tracking-wide text-olive-deep transition-colors hover:bg-olive-deep hover:text-ivory"
+              >
+                Solicitar orçamento
+                <ArrowRight size={16} weight="bold" />
+              </Link>
+            ) : (
+              <WhatsAppCTA message={eventQuoteMessage} label="Solicitar orçamento" size="sm" />
+            )}
+            {isEnabled('packages') && (
+              <Link to="/pacotes" className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-olive-deep">
+                Ver pacotes prontos
+                <ArrowRight size={16} weight="bold" />
+              </Link>
+            )}
           </div>
         </section>
           </div>

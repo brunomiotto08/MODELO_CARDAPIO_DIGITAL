@@ -6,6 +6,8 @@ interface QuantitySliderProps {
   onChange: (value: number) => void;
   label?: string;
   dense?: boolean;
+  /** Sufixo do valor exibido (padrão "un."). */
+  unit?: string;
 }
 
 export default function QuantitySlider({
@@ -16,6 +18,7 @@ export default function QuantitySlider({
   onChange,
   label = 'Quantidade',
   dense = false,
+  unit = 'un.',
 }: QuantitySliderProps) {
   const span = Math.max(max - min, 1);
   const percent = ((value - min) / span) * 100;
@@ -25,7 +28,7 @@ export default function QuantitySlider({
       <div className="flex items-center justify-between gap-3">
         <span className="font-sans text-sm leading-5 text-text">{label}</span>
         <output className="font-sans text-sm font-medium tabular-nums text-olive-deep">
-          {value} un.
+          {value} {unit}
         </output>
       </div>
       <input

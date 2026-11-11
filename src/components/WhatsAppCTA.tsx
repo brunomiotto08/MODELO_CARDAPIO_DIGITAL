@@ -55,7 +55,7 @@ export default function WhatsAppCTA({
           type="button"
           disabled
           aria-disabled="true"
-          title="Configure o número de WhatsApp em src/data/brand.ts antes de publicar"
+          title="Configure o número de WhatsApp em src/config/site.config.ts antes de publicar"
           className={disabledClasses}
         >
           <WhatsappLogo size={size === 'sm' ? 18 : size === 'lg' ? 24 : 20} weight="fill" />

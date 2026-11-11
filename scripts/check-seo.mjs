@@ -6,14 +6,25 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createServer } from 'vite';
 
-const dist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'dist');
-const SITE = 'https://floralecrim.com.br';
-const pages = [
-  ['/', 'index.html'],
-  ['/cardapio', 'cardapio.html'],
-  ['/monte-sua-mesa', 'monte-sua-mesa.html'],
-];
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const dist = path.join(root, 'dist');
+
+// Domínio e páginas vêm do mesmo registro usado no site (src/config).
+const server = await createServer({
+  root,
+  appType: 'custom',
+  logLevel: 'error',
+  server: { middlewareMode: true, hmr: false, watch: null },
+});
+const site = await server.ssrLoadModule('/src/seo/site.ts');
+await server.close();
+
+const SITE = site.SITE_URL;
+const pages = site.routes
+  .filter((route) => route.indexable)
+  .map((route) => [route.path, route.path === '/' ? 'index.html' : `${route.path.slice(1)}.html`]);
 
 let failures = 0;
 const check = (ok, message) => {

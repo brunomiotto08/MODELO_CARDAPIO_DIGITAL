@@ -1,7 +1,33 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import type { Product } from '../types';
-import { buildOrderMessage, buildWhatsAppLink } from '../data/brand';
+import { buildOrderMessage, buildWhatsAppLink, itemLine } from '../data/brand';
 import { menuLine } from '../data/offers';
+import { isEnabled } from '../config/features';
+import { storageKey } from '../lib/storage';
+import { usePersistentState } from '../lib/usePersistentState';
+
+type StoredOrder = { orderItems: string[]; quantities: Record<string, number> };
+
+const emptyOrder: StoredOrder = { orderItems: [], quantities: {} };
+
+/** Revalida a lista salva: descarta itens que saíram do cardápio e reajusta quantidades. */
+function validateStored(value: unknown): StoredOrder | null {
+  if (!value || typeof value !== 'object') return null;
+  const raw = value as Partial<StoredOrder>;
+  if (!Array.isArray(raw.orderItems)) return null;
+  const orderItems: string[] = [];
+  const quantities: Record<string, number> = {};
+  for (const key of raw.orderItems) {
+    const line = typeof key === 'string' ? menuLine(key) : null;
+    if (!line || orderItems.includes(line.key)) continue;
+    orderItems.push(line.key);
+    const saved = Number(raw.quantities?.[line.key]);
+    quantities[line.key] = Number.isFinite(saved)
+      ? Math.min(line.max, Math.max(line.min, Math.round(saved)))
+      : line.min;
+  }
+  return { orderItems, quantities };
+}
 
 interface OrderContextValue {
   orderItems: string[];
@@ -22,27 +48,30 @@ interface OrderContextValue {
 const OrderContext = createContext<OrderContextValue | null>(null);
 
 export function OrderProvider({ children }: { children: ReactNode }) {
-  const [orderItems, setOrderItems] = useState<string[]>([]);
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [order, setOrder] = usePersistentState<StoredOrder>(storageKey('order'), emptyOrder, {
+    enabled: isEnabled('persistence'),
+    validate: validateStored,
+  });
+  const { orderItems, quantities } = order;
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const addLine = useCallback((key: string, quantity?: number) => {
-    setOrderItems((prev) => (prev.includes(key) ? prev : [...prev, key]));
     const line = menuLine(key);
-    if (!line) return;
-    setQuantities((prev) => ({
-      ...prev,
-      [key]: quantity ?? prev[key] ?? line.min,
+    setOrder((prev) => ({
+      orderItems: prev.orderItems.includes(key) ? prev.orderItems : [...prev.orderItems, key],
+      quantities: line
+        ? { ...prev.quantities, [key]: quantity ?? prev.quantities[key] ?? line.min }
+        : prev.quantities,
     }));
-  }, []);
+  }, [setOrder]);
 
   const addToOrder = useCallback((product: Product, quantity?: number) => {
     addLine(product.id, quantity);
   }, [addLine]);
 
   const setItemQuantity = useCallback((productId: string, quantity: number) => {
-    setQuantities((prev) => ({ ...prev, [productId]: quantity }));
-  }, []);
+    setOrder((prev) => ({ ...prev, quantities: { ...prev.quantities, [productId]: quantity } }));
+  }, [setOrder]);
 
   const getQuantity = useCallback(
     (productId: string) => quantities[productId],
@@ -50,18 +79,16 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   );
 
   const removeFromOrder = useCallback((productId: string) => {
-    setOrderItems((prev) => prev.filter((id) => id !== productId));
-    setQuantities((prev) => {
-      const next = { ...prev };
+    setOrder((prev) => {
+      const next = { ...prev.quantities };
       delete next[productId];
-      return next;
+      return { orderItems: prev.orderItems.filter((id) => id !== productId), quantities: next };
     });
-  }, []);
+  }, [setOrder]);
 
   const clearOrder = useCallback(() => {
-    setOrderItems([]);
-    setQuantities({});
-  }, []);
+    setOrder(emptyOrder);
+  }, [setOrder]);
 
   const isInOrder = useCallback(
     (productId: string) => orderItems.includes(productId),
@@ -76,8 +103,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       .map((id) => {
         const line = menuLine(id);
         if (!line) return null;
-        const quantity = quantities[id];
-        return quantity ? `${line.name} — ${quantity} un.` : line.name;
+        return itemLine(line.name, quantities[id]);
       })
       .filter((name): name is string => Boolean(name));
     if (selectedNames.length === 0) return null;
